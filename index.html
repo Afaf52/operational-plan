@@ -1845,9 +1845,9 @@ var PdfReport = (function () {
     });
     this.y += 64;
   };
-  Doc.prototype.bars = function (items) {
+  Doc.prototype.bars = function (items, opts) {
     var self = this, lw = 150, cw = 64, x2 = R - lw - 8, bw = W - lw - cw - 16;
-    var max = Math.max.apply(null, items.map(function (i) { return i.count; }).concat([1]));
+    var max = (opts && opts.max) || Math.max.apply(null, items.map(function (i) { return i.count; }).concat([1]));
     items.forEach(function (it) {
       var lines = self.wrap(it.label, 10.5, 600, lw);
       var h = Math.max(22, lines.length * 15 + 7);
@@ -1856,7 +1856,7 @@ var PdfReport = (function () {
       self.rrect(x2 - bw, self.y + 6, bw, 11, 5.5, '#f3f4f6');
       var fw = Math.max(it.count ? 6 : 0, bw * it.count / max);
       if (fw) self.rrect(x2 - fw, self.y + 6, fw, 11, 5.5, it.color || '#1878b1');
-      self.text(it.count + (it.pct != null ? ' • ' + it.pct + '%' : ''), L, self.y + 15, { size: 10.5, weight: 700, align: 'left' });
+      self.text(it.text != null ? it.text : it.count + (it.pct != null ? ' • ' + it.pct + '%' : ''), L, self.y + 15, { size: 10.5, weight: 700, align: 'left' });
       self.y += h;
     });
     this.y += 6;
@@ -1971,7 +1971,8 @@ var PdfReport = (function () {
     });
   };
 
-  return { Doc: Doc, drawQR: drawQR, PAGE: { W: PW, H: PH } };
+  function setTheme(t) { for (var k in t) C[k] = t[k]; }
+  return { Doc: Doc, drawQR: drawQR, setTheme: setTheme, PAGE: { W: PW, H: PH } };
 })();
 </script>
 <script>(function () {
