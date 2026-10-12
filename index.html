@@ -187,7 +187,7 @@ button{cursor:pointer}
 .an-filters select option{color:var(--ink); background:#fff}
 .an-filters select:focus{outline:3px solid rgba(255,255,255,.6)}
 .an-btn{min-height:44px; border-radius:10px; border:1px solid rgba(255,255,255,.35); background:rgba(255,255,255,.14); color:#fff; font-weight:700; padding:6px 16px; font-size:14px}
-.an-btn.home{background:#fff; color:var(--b800); border:0; font-size:15px; padding:6px 20px; box-shadow:0 6px 18px rgba(0,0,0,.18); border-inline-start:4px solid var(--g500)}
+.an-btn.home{background:#fff; color:var(--b800); border:0; font-size:15px; padding:6px 20px; box-shadow:0 6px 18px rgba(0,0,0,.18); white-space:nowrap}
 .an-btn:hover{filter:brightness(1.06)}
 .tiles{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:16px}
 .tile{background:#fff; border-radius:14px; box-shadow:var(--shadow); padding:16px 18px; display:flex; align-items:center; gap:14px; border:1px solid var(--line); text-align:start; min-width:0; font:inherit; color:inherit}
@@ -205,23 +205,25 @@ button.tile:hover{box-shadow:0 0 0 2px var(--b200), var(--shadow)}
 /* vertical bar chart (HTML) */
 .vbar{display:grid; grid-template-columns:auto 1fr; gap:8px}
 .vbar .yax,.lc .yax{display:flex; flex-direction:column; justify-content:space-between; height:220px; padding-top:15px; margin-bottom:-8px; font-size:11.5px; line-height:16px; color:var(--muted); font-variant-numeric:tabular-nums; text-align:end}
-.vbar .plot{position:relative; height:220px; display:flex; gap:6px; padding:23px 4px 0; border-bottom:1px solid #d5e0ea}
+.vbar .plot{position:relative; height:220px; display:flex; gap:6px; padding:23px 4px 0; border-bottom:2px solid #b9c6d2}
 .vbar .grid{position:absolute; inset:23px 0 0 0; display:flex; flex-direction:column; justify-content:space-between; pointer-events:none}
-.vbar .grid i{display:block; border-top:1px dashed #e6edf3}
+.vbar .grid i{display:block; border-top:1px solid #e3e9ef}
+.vbar .grid i:last-child{border-top-color:transparent}
 .vbar .col{flex:1; min-width:0; height:100%; background:none; border:0; padding:0; position:relative; cursor:pointer}
 .vbar .col .v{position:absolute; inset-inline:0; text-align:center; font-size:12px; font-weight:800; font-variant-numeric:tabular-nums; line-height:16px; color:var(--b900)}
 .vbar .col .b{position:absolute; bottom:0; left:50%; transform:translateX(-50%); width:min(44px,78%); border-radius:6px 6px 0 0; background:linear-gradient(180deg,var(--b500),var(--b600)); min-height:3px; transition:filter .15s}
 .vbar .col:hover .b{filter:brightness(1.1)}
 .vbar .col.on .b{background:linear-gradient(180deg,var(--g500),var(--g600))}
 .vbar .xl{grid-column:2; display:flex; gap:6px; padding-inline:4px}
-.vbar .xl span{flex:1; min-width:0; text-align:center; font-size:12px; color:var(--ink-2); line-height:1.3; overflow-wrap:anywhere}
+.vbar .xl span{flex:1; min-width:0; text-align:center; font-size:12px; color:var(--ink-2); line-height:1.3; word-break:keep-all; overflow-wrap:normal; padding-top:4px}
 /* line chart */
 .lc{display:grid; grid-template-columns:auto 1fr; gap:8px}
-.lc .area{position:relative; height:220px; border-bottom:1px solid #d5e0ea}
+.lc .area{position:relative; height:220px; border-bottom:2px solid #b9c6d2}
 .lc .in{position:absolute; inset:23px 14px 0 14px}
 .lc svg{position:absolute; inset:0; width:100%; height:100%; overflow:visible}
 .lc .grid{position:absolute; inset:0; display:flex; flex-direction:column; justify-content:space-between; pointer-events:none}
-.lc .grid i{display:block; border-top:1px dashed #e6edf3}
+.lc .grid i{display:block; border-top:1px solid #e3e9ef}
+.lc .grid i:last-child{border-top-color:transparent}
 .lc .pt{position:absolute; width:28px; height:28px; margin:-14px 0 0 -14px; border-radius:50%; border:0; background:transparent; padding:0; cursor:pointer; display:grid; place-items:center}
 .lc .pt::after{content:""; width:10px; height:10px; border-radius:50%; background:#fff; border:2.5px solid var(--b600); box-sizing:border-box}
 .lc .pt.zero::after{width:7px; height:7px; border-width:2px; border-color:#b9c9d8}
@@ -242,17 +244,19 @@ button.tile:hover{box-shadow:0 0 0 2px var(--b200), var(--shadow)}
 .lg .n small{color:var(--muted); font-weight:600}
 /* responsible table */
 .rtbl{width:100%; border-collapse:collapse; font-size:14px}
-.rtbl th{font-size:12.5px; color:var(--b600); font-weight:700; text-align:start; padding:8px 10px; border-bottom:1px solid var(--line)}
-.rtbl td{padding:10px; border-bottom:1px solid #eef3f7; font-variant-numeric:tabular-nums}
+.rtbl th{font-size:12.5px; color:var(--b700); font-weight:700; text-align:start; padding:8px 10px; border-bottom:2px solid #cfd9e3; background:var(--b50)}
+.rtbl td{padding:10px; border-bottom:1px solid #dbe3ea; font-variant-numeric:tabular-nums}
 .rtbl tr.row{cursor:pointer} .rtbl tr.row:hover{background:var(--b50)} .rtbl tr.row.on{background:var(--b100)}
 .rtbl .mini{display:flex; align-items:center; gap:8px}
 .rtbl .mini i{display:block; height:6px; border-radius:3px; background:var(--g500); min-width:2px}
 .drill{border:2px solid var(--b200)}
-.tbl-wrap{overflow-x:auto; border:1px solid var(--line); border-radius:12px; background:#fff}
+.tbl-wrap{overflow-x:auto; border:1px solid #cfd9e3; border-radius:12px; background:#fff}
 table.tbl{width:100%; border-collapse:collapse; min-width:680px; font-size:14px}
-.tbl th,.tbl td{padding:10px 12px; border-bottom:1px solid var(--line); text-align:start; vertical-align:top}
+.tbl th,.tbl td{padding:10px 12px; border:1px solid #dbe3ea; text-align:start; vertical-align:top}
+.tbl tr > :first-child{border-inline-start:0} .tbl tr > :last-child{border-inline-end:0} .tbl thead th{border-top:0}
 .tbl th{background:var(--b50); font-weight:700; white-space:nowrap; color:var(--b800)}
-.tbl tr:last-child td{border-bottom:0}
+.tbl tbody tr:last-child td{border-bottom:0}
+.tbl tbody tr:nth-child(even) td{background:#fafcfd}
 .tbl td.num{font-variant-numeric:tabular-nums; white-space:nowrap}
 .tbl .open{background:none; border:0; color:var(--b700); font-weight:700; padding:8px 0; min-height:40px; text-align:start; text-decoration:underline}
 .tip{position:fixed; z-index:90; background:var(--b900); color:#fff; font-size:13px; padding:6px 10px; border-radius:8px; pointer-events:none; white-space:nowrap; box-shadow:0 6px 16px rgba(0,0,0,.2)}
@@ -308,6 +312,29 @@ table.tbl{width:100%; border-collapse:collapse; min-width:680px; font-size:14px}
   .dl{grid-template-columns:1fr}
   .dl dt{border-bottom:0; padding-bottom:2px}
   .dl dd{padding-top:2px}
+}
+/* Phone: every data table becomes a vertical list of cards (no sideways scrolling) */
+@media (max-width:620px){
+  .tbl-wrap.rt-wrap{border:0; background:none; overflow:visible; border-radius:0}
+  table.rt{min-width:0!important; border:0}
+  .rt thead{display:none}
+  .rt,.rt tbody{display:block; width:100%}
+  .rt tr{display:grid; grid-template-columns:1fr 1fr; border:1px solid #cfd9e3; border-radius:12px; margin-bottom:10px; overflow:hidden; background:#fff}
+  .rt td,.rt tbody th{display:flex; flex-direction:column; align-items:flex-start; justify-content:center; gap:2px; padding:8px 12px; border:0!important; border-bottom:1px solid #e3e9ef!important; text-align:start; background:#fff!important; min-width:0; overflow-wrap:anywhere}
+  .rt td:nth-child(even){border-inline-start:1px solid #e3e9ef!important}
+  .rt td::before{content:attr(data-label); font-weight:700; color:var(--muted); font-size:12px}
+  .rt .rt-title,.rt tbody th{grid-column:1 / -1; background:var(--b50)!important; font-weight:800; flex-direction:row; align-items:center; gap:8px; border-inline-start:0!important}
+  .rt .rt-title::before{display:none}
+  .rt td.rt-wide{grid-column:1 / -1; border-inline-start:0!important}
+  .an-filters{display:grid; grid-template-columns:1fr 1fr; gap:8px}
+  .an-filters select:last-of-type:nth-of-type(odd){grid-column:1 / -1}
+  .an-tools{display:grid; grid-template-columns:1fr 1fr; gap:8px}
+  .an-tools > .an-filters,.an-tools > .seg-tabs{grid-column:1 / -1}
+  .an-btn{width:100%; padding-inline:10px; font-size:14px}
+  .tiles .tile{flex-direction:column; align-items:flex-start; gap:8px}
+  .tile .tl{font-size:12.5px; line-height:1.35}
+  .sec-h h2{font-size:18px}
+  .vbar .xl span{font-size:10.5px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -1846,7 +1873,11 @@ var PdfReport = (function () {
     this.y += 64;
   };
   Doc.prototype.bars = function (items, opts) {
-    var self = this, lw = 150, cw = 64, x2 = R - lw - 8, bw = W - lw - cw - 16;
+    var self = this, lw = 150;
+    var label = function (it) { return it.text != null ? it.text : it.count + (it.pct != null ? ' • ' + it.pct + '%' : ''); };
+    this.setFont(10.5, 700);
+    var cw = Math.max(64, Math.max.apply(null, items.map(function (it) { return self.ctx().measureText(String(label(it))).width; }).concat([0])) + 12);
+    var x2 = R - lw - 8, bw = W - lw - cw - 16;
     var max = (opts && opts.max) || Math.max.apply(null, items.map(function (i) { return i.count; }).concat([1]));
     items.forEach(function (it) {
       var lines = self.wrap(it.label, 10.5, 600, lw);
@@ -1856,7 +1887,7 @@ var PdfReport = (function () {
       self.rrect(x2 - bw, self.y + 6, bw, 11, 5.5, '#f3f4f6');
       var fw = Math.max(it.count ? 6 : 0, bw * it.count / max);
       if (fw) self.rrect(x2 - fw, self.y + 6, fw, 11, 5.5, it.color || '#1878b1');
-      self.text(it.text != null ? it.text : it.count + (it.pct != null ? ' • ' + it.pct + '%' : ''), L, self.y + 15, { size: 10.5, weight: 700, align: 'left' });
+      self.text(label(it), L, self.y + 15, { size: 10.5, weight: 700, align: 'left' });
       self.y += h;
     });
     this.y += 6;
@@ -1864,10 +1895,18 @@ var PdfReport = (function () {
   Doc.prototype.table = function (cols, rows) {
     var self = this, lh = 14, pad = 6;
     var widths = cols.map(function (c) { return c.w * W; });
+    function grid(y0, h) { // cell borders: outer edges + every column boundary
+      var ctx = self.ctx(); ctx.strokeStyle = '#c9d4de'; ctx.lineWidth = 0.7; ctx.beginPath();
+      var x = R; ctx.moveTo(x, y0); ctx.lineTo(x, y0 + h);
+      widths.forEach(function (w) { x -= w; ctx.moveTo(x, y0); ctx.lineTo(x, y0 + h); });
+      ctx.moveTo(L, y0 + h); ctx.lineTo(R, y0 + h); ctx.stroke();
+    }
     function headerRow() {
       var hl = cols.map(function (c, i) { return self.wrap(c.t, 9.5, 700, widths[i] - pad * 2); });
       var h = Math.max.apply(null, hl.map(function (l) { return l.length; })) * lh + 10;
       self.ctx().fillStyle = C.head; self.ctx().fillRect(L, self.y, W, h);
+      var c0 = self.ctx(); c0.strokeStyle = '#c9d4de'; c0.lineWidth = 0.7; c0.beginPath(); c0.moveTo(L, self.y); c0.lineTo(R, self.y); c0.stroke();
+      grid(self.y, h);
       var xr = R;
       cols.forEach(function (c, i) {
         hl[i].forEach(function (ln, k) { self.text(ln, c.align === 'center' ? xr - widths[i] / 2 : xr - pad, self.y + 14 + k * lh, { size: 9.5, weight: 700, color: C.ink2, align: c.align === 'center' ? 'center' : 'right' }); });
@@ -1897,8 +1936,8 @@ var PdfReport = (function () {
         });
         xr -= widths[i];
       });
+      grid(self.y, h);
       self.y += h;
-      self.rule();
     });
     this.onPage = null;
     this.y += 12;
@@ -2000,7 +2039,7 @@ var PdfReport = (function () {
   var MONTHS = ['محرم', 'صفر', 'ربيع الأول', 'ربيع الآخر', 'جمادى الأولى', 'جمادى الآخرة', 'رجب', 'شعبان', 'رمضان', 'شوال', 'ذو القعدة', 'ذو الحجة'];
   var BAR_COLORS = ['#1878b1', '#2b8fd0', '#155f8f', '#5aa8de', '#0f4f78', '#3f9a24', '#7fbbe6', '#1f6fa3', '#4a9bd6'];
   var FONT = '"Noto Sans Arabic","Segoe UI",Tahoma,"DejaVu Sans",sans-serif';
-  var MIN_YEAR = 1446; // earliest Hijri year offered anywhere in the dashboard
+  var MIN_YEAR = 1447; // earliest Hijri year offered anywhere in the dashboard
   var APP_TITLE = 'لوحة متابعة برامج الخطة التشغيلية';
 
   /* ================= Helpers ================= */
@@ -2312,10 +2351,10 @@ var PdfReport = (function () {
   function plural(n) { return n + (n === 1 ? ' برنامج' : (n === 2 ? ' برنامجان' : (n <= 10 ? ' برامج' : ' برنامجًا'))); }
   function tableHTML(list) {
     if (!list.length) return '<div class="empty">لا توجد برامج مطابقة.</div>';
-    return '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>البرنامج</th><th>النوع</th><th>مسؤول التنفيذ</th><th>التاريخ</th><th>الإنجاز</th><th>الحالة</th><th>الشواهد</th></tr></thead><tbody>' +
+    return '<div class="tbl-wrap rt-wrap"><table class="tbl rt"><thead><tr><th>البرنامج</th><th>النوع</th><th>مسؤول التنفيذ</th><th>التاريخ</th><th>الإنجاز</th><th>الحالة</th><th>الشواهد</th></tr></thead><tbody>' +
       list.map(function (p) {
         var st = statusOf(p), url = safeUrl(p.evidenceUrl);
-        return '<tr><td><button type="button" class="open" data-act="details" data-id="' + esc(p.id) + '">' + esc(p.name) + '</button></td><td>' + esc(typeLabel(p)) + '</td><td>' + esc(respLabel(p)) + '</td><td class="num">' + esc(shortDate(p)) + '</td><td class="num">' + clampPct(p.progress) + '%</td><td><span class="st ' + st.cls + '">' + st.i + ' ' + st.l + '</span></td><td>' + (url ? '<a href="' + esc(url) + '" target="_blank" rel="noopener noreferrer" style="color:#13608f;font-weight:700">فتح</a>' : '—') + '</td></tr>';
+        return '<tr><td class="rt-title"><button type="button" class="open" data-act="details" data-id="' + esc(p.id) + '">' + esc(p.name) + '</button></td><td data-label="النوع">' + esc(typeLabel(p)) + '</td><td data-label="مسؤول التنفيذ">' + esc(respLabel(p)) + '</td><td class="num" data-label="التاريخ">' + esc(shortDate(p)) + '</td><td class="num" data-label="الإنجاز">' + clampPct(p.progress) + '%</td><td data-label="الحالة"><span class="st ' + st.cls + '">' + st.i + ' ' + st.l + '</span></td><td data-label="الشواهد">' + (url ? '<a href="' + esc(url) + '" target="_blank" rel="noopener noreferrer" style="color:#13608f;font-weight:700">فتح</a>' : '—') + '</td></tr>';
       }).join('') + '</tbody></table></div>';
   }
   function tileHTML(act, color, icon, label, value, on) {
@@ -2346,12 +2385,20 @@ var PdfReport = (function () {
     $('ch-month-note').textContent = 'اضغط على النقطة لعرض برامج الشهر';
     var nt = niceTop(Math.max.apply(null, vals.concat([1])));
     var pts = vals.map(function (v, i) { return { x: 1000 - i * (1000 / 11), y: 300 - v / nt.top * 300, v: v, i: i }; });
-    var d = 'M' + pts[0].x + ',' + pts[0].y;
-    for (var i = 0; i < pts.length - 1; i++) {
-      var p0 = pts[i - 1] || pts[i], p1 = pts[i], p2 = pts[i + 1], p3 = pts[i + 2] || p2;
-      var c1x = p1.x + (p2.x - p0.x) / 6, c1y = Math.min(300, Math.max(0, p1.y + (p2.y - p0.y) / 6));
-      var c2x = p2.x - (p3.x - p1.x) / 6, c2y = Math.min(300, Math.max(0, p2.y - (p3.y - p1.y) / 6));
-      d += ' C' + c1x.toFixed(1) + ',' + c1y.toFixed(1) + ' ' + c2x.toFixed(1) + ',' + c2y.toFixed(1) + ' ' + p2.x.toFixed(1) + ',' + p2.y.toFixed(1);
+    // Monotone cubic (Fritsch–Carlson): smooth, but never overshoots the real values between months.
+    var nP = pts.length, m = [], t = [];
+    for (var k = 0; k < nP - 1; k++) m.push((pts[k + 1].y - pts[k].y) / (pts[k + 1].x - pts[k].x));
+    t[0] = m[0]; t[nP - 1] = m[nP - 2];
+    for (k = 1; k < nP - 1; k++) t[k] = m[k - 1] * m[k] <= 0 ? 0 : (m[k - 1] + m[k]) / 2;
+    for (k = 0; k < nP - 1; k++) {
+      if (m[k] === 0) { t[k] = 0; t[k + 1] = 0; continue; }
+      var a1 = t[k] / m[k], b1 = t[k + 1] / m[k], hh = a1 * a1 + b1 * b1;
+      if (hh > 9) { var tau = 3 / Math.sqrt(hh); t[k] = tau * a1 * m[k]; t[k + 1] = tau * b1 * m[k]; }
+    }
+    var d = 'M' + pts[0].x.toFixed(1) + ',' + pts[0].y.toFixed(1);
+    for (k = 0; k < nP - 1; k++) {
+      var dx = (pts[k + 1].x - pts[k].x) / 3;
+      d += ' C' + (pts[k].x + dx).toFixed(1) + ',' + (pts[k].y + t[k] * dx).toFixed(1) + ' ' + (pts[k + 1].x - dx).toFixed(1) + ',' + (pts[k + 1].y - t[k + 1] * dx).toFixed(1) + ' ' + pts[k + 1].x.toFixed(1) + ',' + pts[k + 1].y.toFixed(1);
     }
     var area = d + ' L' + pts[11].x + ',300 L' + pts[0].x + ',300 Z';
     var selM = Number(S.filters.m);

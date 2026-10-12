@@ -187,7 +187,7 @@ button{cursor:pointer}
 .an-filters select option{color:var(--ink); background:#fff}
 .an-filters select:focus{outline:3px solid rgba(255,255,255,.6)}
 .an-btn{min-height:44px; border-radius:10px; border:1px solid rgba(255,255,255,.35); background:rgba(255,255,255,.14); color:#fff; font-weight:700; padding:6px 16px; font-size:14px}
-.an-btn.home{background:#fff; color:var(--b800); border:0; font-size:15px; padding:6px 20px; box-shadow:0 6px 18px rgba(0,0,0,.18); border-inline-start:4px solid var(--g500)}
+.an-btn.home{background:#fff; color:var(--b800); border:0; font-size:15px; padding:6px 20px; box-shadow:0 6px 18px rgba(0,0,0,.18); white-space:nowrap}
 .an-btn:hover{filter:brightness(1.06)}
 .tiles{display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:16px}
 .tile{background:#fff; border-radius:14px; box-shadow:var(--shadow); padding:16px 18px; display:flex; align-items:center; gap:14px; border:1px solid var(--line); text-align:start; min-width:0; font:inherit; color:inherit}
@@ -205,23 +205,25 @@ button.tile:hover{box-shadow:0 0 0 2px var(--b200), var(--shadow)}
 /* vertical bar chart (HTML) */
 .vbar{display:grid; grid-template-columns:auto 1fr; gap:8px}
 .vbar .yax,.lc .yax{display:flex; flex-direction:column; justify-content:space-between; height:220px; padding-top:15px; margin-bottom:-8px; font-size:11.5px; line-height:16px; color:var(--muted); font-variant-numeric:tabular-nums; text-align:end}
-.vbar .plot{position:relative; height:220px; display:flex; gap:6px; padding:23px 4px 0; border-bottom:1px solid #d5e0ea}
+.vbar .plot{position:relative; height:220px; display:flex; gap:6px; padding:23px 4px 0; border-bottom:2px solid #b9c6d2}
 .vbar .grid{position:absolute; inset:23px 0 0 0; display:flex; flex-direction:column; justify-content:space-between; pointer-events:none}
-.vbar .grid i{display:block; border-top:1px dashed #e6edf3}
+.vbar .grid i{display:block; border-top:1px solid #e3e9ef}
+.vbar .grid i:last-child{border-top-color:transparent}
 .vbar .col{flex:1; min-width:0; height:100%; background:none; border:0; padding:0; position:relative; cursor:pointer}
 .vbar .col .v{position:absolute; inset-inline:0; text-align:center; font-size:12px; font-weight:800; font-variant-numeric:tabular-nums; line-height:16px; color:var(--b900)}
 .vbar .col .b{position:absolute; bottom:0; left:50%; transform:translateX(-50%); width:min(44px,78%); border-radius:6px 6px 0 0; background:linear-gradient(180deg,var(--b500),var(--b600)); min-height:3px; transition:filter .15s}
 .vbar .col:hover .b{filter:brightness(1.1)}
 .vbar .col.on .b{background:linear-gradient(180deg,var(--g500),var(--g600))}
 .vbar .xl{grid-column:2; display:flex; gap:6px; padding-inline:4px}
-.vbar .xl span{flex:1; min-width:0; text-align:center; font-size:12px; color:var(--ink-2); line-height:1.3; overflow-wrap:anywhere}
+.vbar .xl span{flex:1; min-width:0; text-align:center; font-size:12px; color:var(--ink-2); line-height:1.3; word-break:keep-all; overflow-wrap:normal; padding-top:4px}
 /* line chart */
 .lc{display:grid; grid-template-columns:auto 1fr; gap:8px}
-.lc .area{position:relative; height:220px; border-bottom:1px solid #d5e0ea}
+.lc .area{position:relative; height:220px; border-bottom:2px solid #b9c6d2}
 .lc .in{position:absolute; inset:23px 14px 0 14px}
 .lc svg{position:absolute; inset:0; width:100%; height:100%; overflow:visible}
 .lc .grid{position:absolute; inset:0; display:flex; flex-direction:column; justify-content:space-between; pointer-events:none}
-.lc .grid i{display:block; border-top:1px dashed #e6edf3}
+.lc .grid i{display:block; border-top:1px solid #e3e9ef}
+.lc .grid i:last-child{border-top-color:transparent}
 .lc .pt{position:absolute; width:28px; height:28px; margin:-14px 0 0 -14px; border-radius:50%; border:0; background:transparent; padding:0; cursor:pointer; display:grid; place-items:center}
 .lc .pt::after{content:""; width:10px; height:10px; border-radius:50%; background:#fff; border:2.5px solid var(--b600); box-sizing:border-box}
 .lc .pt.zero::after{width:7px; height:7px; border-width:2px; border-color:#b9c9d8}
@@ -242,17 +244,19 @@ button.tile:hover{box-shadow:0 0 0 2px var(--b200), var(--shadow)}
 .lg .n small{color:var(--muted); font-weight:600}
 /* responsible table */
 .rtbl{width:100%; border-collapse:collapse; font-size:14px}
-.rtbl th{font-size:12.5px; color:var(--b600); font-weight:700; text-align:start; padding:8px 10px; border-bottom:1px solid var(--line)}
-.rtbl td{padding:10px; border-bottom:1px solid #eef3f7; font-variant-numeric:tabular-nums}
+.rtbl th{font-size:12.5px; color:var(--b700); font-weight:700; text-align:start; padding:8px 10px; border-bottom:2px solid #cfd9e3; background:var(--b50)}
+.rtbl td{padding:10px; border-bottom:1px solid #dbe3ea; font-variant-numeric:tabular-nums}
 .rtbl tr.row{cursor:pointer} .rtbl tr.row:hover{background:var(--b50)} .rtbl tr.row.on{background:var(--b100)}
 .rtbl .mini{display:flex; align-items:center; gap:8px}
 .rtbl .mini i{display:block; height:6px; border-radius:3px; background:var(--g500); min-width:2px}
 .drill{border:2px solid var(--b200)}
-.tbl-wrap{overflow-x:auto; border:1px solid var(--line); border-radius:12px; background:#fff}
+.tbl-wrap{overflow-x:auto; border:1px solid #cfd9e3; border-radius:12px; background:#fff}
 table.tbl{width:100%; border-collapse:collapse; min-width:680px; font-size:14px}
-.tbl th,.tbl td{padding:10px 12px; border-bottom:1px solid var(--line); text-align:start; vertical-align:top}
+.tbl th,.tbl td{padding:10px 12px; border:1px solid #dbe3ea; text-align:start; vertical-align:top}
+.tbl tr > :first-child{border-inline-start:0} .tbl tr > :last-child{border-inline-end:0} .tbl thead th{border-top:0}
 .tbl th{background:var(--b50); font-weight:700; white-space:nowrap; color:var(--b800)}
-.tbl tr:last-child td{border-bottom:0}
+.tbl tbody tr:last-child td{border-bottom:0}
+.tbl tbody tr:nth-child(even) td{background:#fafcfd}
 .tbl td.num{font-variant-numeric:tabular-nums; white-space:nowrap}
 .tbl .open{background:none; border:0; color:var(--b700); font-weight:700; padding:8px 0; min-height:40px; text-align:start; text-decoration:underline}
 .tip{position:fixed; z-index:90; background:var(--b900); color:#fff; font-size:13px; padding:6px 10px; border-radius:8px; pointer-events:none; white-space:nowrap; box-shadow:0 6px 16px rgba(0,0,0,.2)}
@@ -308,6 +312,29 @@ table.tbl{width:100%; border-collapse:collapse; min-width:680px; font-size:14px}
   .dl{grid-template-columns:1fr}
   .dl dt{border-bottom:0; padding-bottom:2px}
   .dl dd{padding-top:2px}
+}
+/* Phone: every data table becomes a vertical list of cards (no sideways scrolling) */
+@media (max-width:620px){
+  .tbl-wrap.rt-wrap{border:0; background:none; overflow:visible; border-radius:0}
+  table.rt{min-width:0!important; border:0}
+  .rt thead{display:none}
+  .rt,.rt tbody{display:block; width:100%}
+  .rt tr{display:grid; grid-template-columns:1fr 1fr; border:1px solid #cfd9e3; border-radius:12px; margin-bottom:10px; overflow:hidden; background:#fff}
+  .rt td,.rt tbody th{display:flex; flex-direction:column; align-items:flex-start; justify-content:center; gap:2px; padding:8px 12px; border:0!important; border-bottom:1px solid #e3e9ef!important; text-align:start; background:#fff!important; min-width:0; overflow-wrap:anywhere}
+  .rt td:nth-child(even){border-inline-start:1px solid #e3e9ef!important}
+  .rt td::before{content:attr(data-label); font-weight:700; color:var(--muted); font-size:12px}
+  .rt .rt-title,.rt tbody th{grid-column:1 / -1; background:var(--b50)!important; font-weight:800; flex-direction:row; align-items:center; gap:8px; border-inline-start:0!important}
+  .rt .rt-title::before{display:none}
+  .rt td.rt-wide{grid-column:1 / -1; border-inline-start:0!important}
+  .an-filters{display:grid; grid-template-columns:1fr 1fr; gap:8px}
+  .an-filters select:last-of-type:nth-of-type(odd){grid-column:1 / -1}
+  .an-tools{display:grid; grid-template-columns:1fr 1fr; gap:8px}
+  .an-tools > .an-filters,.an-tools > .seg-tabs{grid-column:1 / -1}
+  .an-btn{width:100%; padding-inline:10px; font-size:14px}
+  .tiles .tile{flex-direction:column; align-items:flex-start; gap:8px}
+  .tile .tl{font-size:12.5px; line-height:1.35}
+  .sec-h h2{font-size:18px}
+  .vbar .xl span{font-size:10.5px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -420,6 +447,22 @@ table.explain{width:100%; border-collapse:collapse; font-size:15px}
   .grp-f input{font-size:17px}
   .date-row{grid-template-columns:0.9fr 1.5fr 1.1fr; gap:8px}
   .date-row select{padding-inline:8px; font-size:15px}
+}
+.one-day{margin:0 0 10px; font-size:13.5px; color:var(--ink-2); background:var(--b50); border:1px solid var(--line); border-radius:10px; padding:8px 12px}
+.att th,.att td{border-color:#d3dfd0!important}
+.att{border:0}
+.tbl-wrap .att thead th:first-child,.tbl-wrap .att tbody th{border-inline-start:0}
+.tbl-wrap .att tr > :last-child{border-inline-end:0}
+.tbl-wrap .att thead th{border-top:0}
+.tbl-wrap .att tbody tr:last-child > *{border-bottom:0}
+.explain th,.explain td{border-color:#d3dfd0}
+.acts{justify-content:flex-end}
+@media (max-width:620px){
+  .att.rt td{font-size:15px}
+  .acts .rb{flex:1 1 calc(50% - 6px)}
+  .rt td[data-label="إجراءات"],.rt td[data-label="ملاحظات"]{grid-column:1 / -1; border-inline-start:0!important; align-items:stretch}
+  .rt td[data-label="إجراءات"]::before{display:none}
+  .acts{width:100%}
 }
 </style>
 
@@ -709,7 +752,11 @@ var PdfReport = (function () {
     this.y += 64;
   };
   Doc.prototype.bars = function (items, opts) {
-    var self = this, lw = 150, cw = 64, x2 = R - lw - 8, bw = W - lw - cw - 16;
+    var self = this, lw = 150;
+    var label = function (it) { return it.text != null ? it.text : it.count + (it.pct != null ? ' • ' + it.pct + '%' : ''); };
+    this.setFont(10.5, 700);
+    var cw = Math.max(64, Math.max.apply(null, items.map(function (it) { return self.ctx().measureText(String(label(it))).width; }).concat([0])) + 12);
+    var x2 = R - lw - 8, bw = W - lw - cw - 16;
     var max = (opts && opts.max) || Math.max.apply(null, items.map(function (i) { return i.count; }).concat([1]));
     items.forEach(function (it) {
       var lines = self.wrap(it.label, 10.5, 600, lw);
@@ -719,7 +766,7 @@ var PdfReport = (function () {
       self.rrect(x2 - bw, self.y + 6, bw, 11, 5.5, '#f3f4f6');
       var fw = Math.max(it.count ? 6 : 0, bw * it.count / max);
       if (fw) self.rrect(x2 - fw, self.y + 6, fw, 11, 5.5, it.color || '#1878b1');
-      self.text(it.text != null ? it.text : it.count + (it.pct != null ? ' • ' + it.pct + '%' : ''), L, self.y + 15, { size: 10.5, weight: 700, align: 'left' });
+      self.text(label(it), L, self.y + 15, { size: 10.5, weight: 700, align: 'left' });
       self.y += h;
     });
     this.y += 6;
@@ -727,10 +774,18 @@ var PdfReport = (function () {
   Doc.prototype.table = function (cols, rows) {
     var self = this, lh = 14, pad = 6;
     var widths = cols.map(function (c) { return c.w * W; });
+    function grid(y0, h) { // cell borders: outer edges + every column boundary
+      var ctx = self.ctx(); ctx.strokeStyle = '#c9d4de'; ctx.lineWidth = 0.7; ctx.beginPath();
+      var x = R; ctx.moveTo(x, y0); ctx.lineTo(x, y0 + h);
+      widths.forEach(function (w) { x -= w; ctx.moveTo(x, y0); ctx.lineTo(x, y0 + h); });
+      ctx.moveTo(L, y0 + h); ctx.lineTo(R, y0 + h); ctx.stroke();
+    }
     function headerRow() {
       var hl = cols.map(function (c, i) { return self.wrap(c.t, 9.5, 700, widths[i] - pad * 2); });
       var h = Math.max.apply(null, hl.map(function (l) { return l.length; })) * lh + 10;
       self.ctx().fillStyle = C.head; self.ctx().fillRect(L, self.y, W, h);
+      var c0 = self.ctx(); c0.strokeStyle = '#c9d4de'; c0.lineWidth = 0.7; c0.beginPath(); c0.moveTo(L, self.y); c0.lineTo(R, self.y); c0.stroke();
+      grid(self.y, h);
       var xr = R;
       cols.forEach(function (c, i) {
         hl[i].forEach(function (ln, k) { self.text(ln, c.align === 'center' ? xr - widths[i] / 2 : xr - pad, self.y + 14 + k * lh, { size: 9.5, weight: 700, color: C.ink2, align: c.align === 'center' ? 'center' : 'right' }); });
@@ -760,8 +815,8 @@ var PdfReport = (function () {
         });
         xr -= widths[i];
       });
+      grid(self.y, h);
       self.y += h;
-      self.rule();
     });
     this.onPage = null;
     this.y += 12;
@@ -847,7 +902,7 @@ var PdfReport = (function () {
     { k: 'admins', l: 'الإداريات', row: 'عدد الإداريات', i: '🗂️', color: '#7a8f3c' }
   ];
   var MONTHS = ['محرم', 'صفر', 'ربيع الأول', 'ربيع الآخر', 'جمادى الأولى', 'جمادى الآخرة', 'رجب', 'شعبان', 'رمضان', 'شوال', 'ذو القعدة', 'ذو الحجة'];
-  var MIN_YEAR = 1446;
+  var MIN_YEAR = 1447;
   var FONT = '"Noto Sans Arabic","Segoe UI",Tahoma,"DejaVu Sans",sans-serif';
   var API = '/api/attendance';
   var DAY_MS = 864e5;
@@ -960,8 +1015,8 @@ var PdfReport = (function () {
   }
   function dayTitle(d) { return 'الإحصائية اليومية للغياب والحضور - يوم ' + weekday(d.date) + ' ' + hSlash(d); }
   function attTableHTML(d) {
-    return '<div class="tbl-wrap"><table class="att"><thead><tr><th>المنسوبات</th><th>المجموع الكلي</th><th>الحضور</th><th>الغياب</th><th>نسبة الحضور</th></tr></thead><tbody>' +
-      GROUPS.map(function (g) { var s = groupStats(d, g.k); return '<tr><th scope="row">' + g.row + '</th><td>' + s.total + '</td><td>' + s.present + '</td><td class="abs">' + s.absent + '</td><td class="pc">' + pctText(s.pct) + '</td></tr>'; }).join('') +
+    return '<div class="tbl-wrap rt-wrap"><table class="att rt"><thead><tr><th>المنسوبات</th><th>المجموع الكلي</th><th>الحضور</th><th>الغياب</th><th>نسبة الحضور</th></tr></thead><tbody>' +
+      GROUPS.map(function (g) { var s = groupStats(d, g.k); return '<tr><th scope="row">' + g.i + ' ' + g.row + '</th><td data-label="المجموع الكلي">' + s.total + '</td><td data-label="الحضور">' + s.present + '</td><td class="abs" data-label="الغياب">' + s.absent + '</td><td class="pc" data-label="نسبة الحضور">' + pctText(s.pct) + '</td></tr>'; }).join('') +
       '</tbody></table></div>';
   }
   function explainHTML(d) {
@@ -993,11 +1048,11 @@ var PdfReport = (function () {
     if (!S.loaded) { box.innerHTML = ''; return; }
     if (!ds.length) { box.innerHTML = '<div class="empty">سيظهر هنا كل يوم تحفظه، مع إمكانية عرضه وتعديله وحذفه وطباعته.</div>'; return; }
     var shown = ds.slice(0, S.histLimit);
-    box.innerHTML = '<div class="tbl-wrap"><table class="tbl hist"><thead><tr><th>اليوم والتاريخ</th>' + GROUPS.map(function (g) { return '<th>' + g.l + '</th>'; }).join('') + '<th>إجراءات</th></tr></thead><tbody>' +
+    box.innerHTML = '<div class="tbl-wrap rt-wrap"><table class="tbl hist rt"><thead><tr><th>اليوم والتاريخ</th>' + GROUPS.map(function (g) { return '<th>' + g.l + '</th>'; }).join('') + '<th>إجراءات</th></tr></thead><tbody>' +
       shown.map(function (d) {
-        return '<tr' + (d.date === S.viewId ? ' class="sel"' : '') + '><td><b>' + weekday(d.date) + '</b><br><span class="muted">' + esc(hText(d)) + '</span></td>' +
-          GROUPS.map(function (g) { var s = groupStats(d, g.k); return '<td class="num"><b>' + pctShort(s.pct) + '</b><br><span class="muted">غياب ' + s.absent + ' من ' + s.total + '</span></td>'; }).join('') +
-          '<td><div class="acts"><button type="button" class="rb print" data-act="view" data-id="' + d.date + '">عرض</button><button type="button" class="rb edit" data-act="edit" data-id="' + d.date + '">تعديل</button><button type="button" class="rb share" data-act="print-day" data-id="' + d.date + '">طباعة</button><button type="button" class="rb del" data-act="delete" data-id="' + d.date + '">حذف</button></div></td></tr>';
+        return '<tr' + (d.date === S.viewId ? ' class="sel"' : '') + '><td class="rt-title"><span><b>' + weekday(d.date) + '</b> <span class="muted">' + esc(hText(d)) + '</span></span></td>' +
+          GROUPS.map(function (g) { var s = groupStats(d, g.k); return '<td class="num" data-label="' + g.l + '"><span><b>' + pctShort(s.pct) + '</b> <span class="muted">(غياب ' + s.absent + ' من ' + s.total + ')</span></span></td>'; }).join('') +
+          '<td data-label="إجراءات"><div class="acts"><button type="button" class="rb print" data-act="view" data-id="' + d.date + '">عرض</button><button type="button" class="rb edit" data-act="edit" data-id="' + d.date + '">تعديل</button><button type="button" class="rb share" data-act="print-day" data-id="' + d.date + '">طباعة</button><button type="button" class="rb del" data-act="delete" data-id="' + d.date + '">حذف</button></div></td></tr>';
       }).join('') + '</tbody></table></div>' +
       (ds.length > shown.length ? '<div style="text-align:center;margin-top:12px"><button type="button" class="btn btn-soft" data-act="more">عرض المزيد (' + (ds.length - shown.length) + ')</button></div>' : '');
   }
@@ -1150,8 +1205,16 @@ var PdfReport = (function () {
   function lineChart(days) {
     var series = GROUPS.map(function (g) { return { g: g, vals: days.map(function (d) { return groupStats(d, g.k).pct; }) }; });
     var all = []; series.forEach(function (s) { s.vals.forEach(function (v) { if (v != null) all.push(v); }); });
-    var lo = all.length ? Math.max(0, Math.floor((Math.min.apply(null, all) - 5) / 10) * 10) : 0, hi = 100, n = days.length;
-    var ticks = [0, 1, 2, 3, 4].map(function (i) { return Math.round(hi - (hi - lo) * i / 4); });
+    var n = days.length, hi = 100;
+    if (n === 1) {
+      var d0 = days[0];
+      return '<p class="one-day">يوم واحد مسجل في هذه الفترة (' + weekday(d0.date) + ' ' + esc(hText(d0)) + ') — نسبة الحضور لكل فئة:</p>' +
+        barChart(GROUPS.map(function (g) { var s = groupStats(d0, g.k); return { label: g.l, v: s.pct || 0, fmt: '%', id: d0.date, color: g.color, tip: g.l + ': ' + pctText(s.pct) }; }));
+    }
+    var minv = all.length ? Math.min.apply(null, all) : 100;
+    var step = Math.max(5, Math.ceil((hi - (minv - 2)) / 4 / 5) * 5), lo = hi - 4 * step;
+    if (lo < 0) { step = 25; lo = 0; }
+    var ticks = [0, 1, 2, 3, 4].map(function (i) { return hi - step * i; });
     function X(i) { return n === 1 ? 500 : 1000 - i * 1000 / (n - 1); }
     function Y(v) { return 300 - (v - lo) / (hi - lo) * 300; }
     var paths = series.map(function (s) {
@@ -1180,14 +1243,15 @@ var PdfReport = (function () {
     return '<div class="vbar"><div class="yax">' + ticks.map(function (t) { return '<span>' + t + (items[0].fmt === '%' ? '%' : '') + '</span>'; }).join('') + '</div><div class="plot"><div class="grid"><i></i><i></i><i></i><i></i><i></i></div>' +
       items.map(function (x) {
         var h = x.v / top * 100;
-        return '<button type="button" class="col"' + (x.id ? ' data-act="day" data-id="' + x.id + '"' : ' tabindex="-1"') + ' data-tip="' + esc(x.tip) + '" aria-label="' + esc(x.tip) + '"><span class="b" style="height:' + h + '%"></span><span class="v" style="bottom:calc(' + h + '% + 4px)">' + (x.fmt === '%' ? (Math.round(x.v * 10) / 10) : x.v) + '</span></button>';
+        return '<button type="button" class="col"' + (x.id ? ' data-act="day" data-id="' + x.id + '"' : ' tabindex="-1"') + ' data-tip="' + esc(x.tip) + '" aria-label="' + esc(x.tip) + '"><span class="b" style="height:' + h + '%' + (x.color ? ';background:' + x.color : '') + '"></span><span class="v" style="bottom:calc(' + h + '% + 4px)">' + (x.fmt === '%' ? (Math.round(x.v * 10) / 10) : x.v) + '</span></button>';
       }).join('') + '</div><div class="xl">' + items.map(function (x) { return '<span>' + esc(x.label) + '</span>'; }).join('') + '</div></div>';
   }
   function periodTable(days) {
-    return '<div class="tbl-wrap"><table class="tbl"><thead><tr><th>اليوم والتاريخ</th>' + GROUPS.map(function (g) { return '<th>' + g.l + ' (حضور / غياب)</th><th>النسبة</th>'; }).join('') + '</tr></thead><tbody>' +
+    return '<div class="tbl-wrap rt-wrap"><table class="tbl rt"><thead><tr><th>اليوم والتاريخ</th>' + GROUPS.map(function (g) { return '<th>' + g.l + '</th>'; }).join('') + '<th>ملاحظات</th></tr></thead><tbody>' +
       days.map(function (d) {
-        return '<tr><td><button type="button" class="open" data-act="day" data-id="' + d.date + '">' + weekday(d.date) + ' ' + esc(hText(d)) + '</button></td>' +
-          GROUPS.map(function (g) { var s = groupStats(d, g.k); return '<td class="num">' + s.present + ' / ' + s.absent + '</td><td class="num"><b>' + pctText(s.pct) + '</b></td>'; }).join('') + '</tr>';
+        return '<tr><td class="rt-title"><button type="button" class="open" data-act="day" data-id="' + d.date + '">' + weekday(d.date) + ' ' + esc(hText(d)) + '</button></td>' +
+          GROUPS.map(function (g) { var s = groupStats(d, g.k); return '<td class="num" data-label="' + g.l + '"><span><b>' + pctText(s.pct) + '</b> <span class="muted">(حضور ' + s.present + ' • غياب ' + s.absent + ')</span></span></td>'; }).join('') +
+          '<td data-label="ملاحظات">' + (d.notes ? esc(d.notes) : '—') + '</td></tr>';
       }).join('') + '</tbody></table></div>';
   }
   function renderAnalytics() {
@@ -1214,10 +1278,11 @@ var PdfReport = (function () {
       $('ch-abs-title').textContent = 'غياب الطالبات يومًا بيوم'; $('ch-abs-note').textContent = 'اضغط على العمود لعرض اليوم';
       $('ch-abs').innerHTML = barChart(days.map(function (d) { return { label: weekday(d.date), v: d.students.absent, id: d.date, tip: weekday(d.date) + ': غياب ' + d.students.absent + ' طالبة' }; }));
     } else {
-      $('ch-abs-title').textContent = 'متوسط حضور الطالبات لكل أسبوع'; $('ch-abs-note').textContent = 'محسوب من أيام الأسبوع المسجلة';
+      $('ch-abs-title').textContent = 'متوسط غياب الطالبات اليومي لكل أسبوع'; $('ch-abs-note').textContent = 'مجموع غياب الأسبوع ÷ أيامه المسجلة';
       var wk = {}; days.forEach(function (d) { var k = weekStart(d.date); (wk[k] = wk[k] || []).push(d); });
       $('ch-abs').innerHTML = barChart(Object.keys(wk).sort().map(function (k, i) {
-        var s = sumStats(wk[k], 'students'); return { label: 'الأسبوع ' + (i + 1), v: s.pct || 0, fmt: '%', tip: 'الأسبوع ' + (i + 1) + ': ' + pctText(s.pct) + ' (' + wk[k].length + ' أيام)' };
+        var s = sumStats(wk[k], 'students'), avg = Math.round(s.absent / wk[k].length * 10) / 10;
+        return { label: 'الأسبوع ' + (i + 1), v: avg, tip: 'الأسبوع ' + (i + 1) + ': متوسط ' + avg + ' غائبة يوميًا • حضور ' + pctText(s.pct) + ' (' + wk[k].length + ' أيام)' };
       }));
     }
     $('t-a-list').textContent = 'أيام الفترة (' + days.length + ')';
