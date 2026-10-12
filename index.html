@@ -1999,6 +1999,7 @@ var PdfReport = (function () {
   var MONTHS = ['محرم', 'صفر', 'ربيع الأول', 'ربيع الآخر', 'جمادى الأولى', 'جمادى الآخرة', 'رجب', 'شعبان', 'رمضان', 'شوال', 'ذو القعدة', 'ذو الحجة'];
   var BAR_COLORS = ['#1878b1', '#2b8fd0', '#155f8f', '#5aa8de', '#0f4f78', '#3f9a24', '#7fbbe6', '#1f6fa3', '#4a9bd6'];
   var FONT = '"Noto Sans Arabic","Segoe UI",Tahoma,"DejaVu Sans",sans-serif';
+  var MIN_YEAR = 1446; // earliest Hijri year offered anywhere in the dashboard
   var APP_TITLE = 'لوحة متابعة برامج الخطة التشغيلية';
 
   /* ================= Helpers ================= */
@@ -2257,8 +2258,8 @@ var PdfReport = (function () {
   var TYPE_COLORS = { educational: '#1878b1', cultural: '#d4a62e', sports: '#358818', social: '#0e9aa7', tech: '#4a5fc1', development: '#d9772b', health: '#2e9e6e', scientific: '#5aa3d6', other: '#8a8f98' };
   function yearsRange() {
     var y = hijriToday().y, set = {};
-    for (var i = y - 3; i <= y + 2; i++) set[i] = 1;
-    S.programs.forEach(function (p) { if (p.hYear) set[p.hYear] = 1; });
+    for (var i = Math.max(MIN_YEAR, y - 3); i <= Math.max(MIN_YEAR, y) + 2; i++) set[i] = 1;
+    S.programs.forEach(function (p) { if (p.hYear >= MIN_YEAR) set[p.hYear] = 1; });
     return Object.keys(set).map(Number).sort(function (a, b) { return a - b; });
   }
   function opts(list, all, sel) {
@@ -2468,7 +2469,7 @@ var PdfReport = (function () {
     var d = '<option value="">اختر اليوم</option>'; for (var i = 1; i <= 30; i++) d += '<option value="' + i + '">' + i + '</option>';
     $('p-hDay').innerHTML = d;
     $('p-hMonth').innerHTML = '<option value="">اختر الشهر</option>' + MONTHS.map(function (m, i) { return '<option value="' + (i + 1) + '">' + m + '</option>'; }).join('');
-    var ys = yearsRange(); if (p && p.hYear && ys.indexOf(p.hYear) < 0) ys.push(p.hYear);
+    var ys = yearsRange();
     $('p-hYear').innerHTML = '<option value="">اختر السنة</option>' + ys.map(function (y) { return '<option value="' + y + '">' + y + ' هـ</option>'; }).join('');
     $('p-status').innerHTML = STATUS.map(function (s) { return '<option value="' + s.k + '">' + s.i + ' ' + s.l + '</option>'; }).join('');
   }
@@ -2530,7 +2531,7 @@ var PdfReport = (function () {
     if (o.responsible === 'other' && !o.responsibleOther) e.responsibleOther = 'اكتب مسؤول التنفيذ.';
     if (!(o.hDay >= 1 && o.hDay <= 30)) e.hDay = 'اختر اليوم.';
     if (!(o.hMonth >= 1 && o.hMonth <= 12)) e.hMonth = 'اختر الشهر.';
-    if (!(o.hYear >= 1300 && o.hYear <= 1600)) e.hYear = 'اختر السنة.';
+    if (!(o.hYear >= MIN_YEAR && o.hYear <= 1600)) e.hYear = 'اختر السنة (من ' + MIN_YEAR + ' هـ فما بعد).';
     if (o.evidenceUrl && !safeUrl(o.evidenceUrl)) e.evidenceUrl = 'الرابط غير صحيح. اكتب رابطًا كاملًا يبدأ بـ https://';
     var pr = Number(o.progressRaw);
     if (o.progressRaw === '' || !isFinite(pr) || pr < 0 || pr > 100 || Math.round(pr) !== pr) e.progress = 'نسبة الإنجاز رقم صحيح من 0 إلى 100.';
