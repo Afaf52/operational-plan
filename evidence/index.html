@@ -285,6 +285,19 @@ select.field{appearance:auto}
   .pv-note{display:none}
   .pv-scroll{height:calc(100% - 64px)}
 }
+@media (max-width:560px){
+  .icon-btn{width:40px; height:40px}
+  .text-btn{min-height:40px}
+  .chip,.add{min-height:42px}
+  .link{padding-inline:8px}
+  .link-acts{width:100%; justify-content:flex-end; gap:6px}
+}
+@media (max-height:520px){
+  .topbar{position:static; min-height:0}
+  .el-head{position:static}
+  .dialog{max-height:calc(100vh - 16px)}
+  .modal{padding:8px}
+}
 @page{size:A4; margin:14mm 12mm}
 @media print{
   :root{color-scheme:light}
