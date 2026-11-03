@@ -17,5 +17,11 @@
         }
       ]
     }
+  ],
+  "rewrites": [
+    {
+      "source": "/hanan-alharbi",
+      "destination": "/evidence/index.html"
+    }
   ]
 }
