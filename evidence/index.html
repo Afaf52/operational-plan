@@ -298,6 +298,30 @@ select.field{appearance:auto}
   .dialog{max-height:calc(100vh - 16px)}
   .modal{padding:8px}
 }
+.rep.paged{background:none; box-shadow:none; padding:0; display:flex; flex-direction:column; gap:16px}
+.r-page{background:#fff; box-shadow:var(--shadow-xl); padding:40px 44px; min-height:1000px}
+.r-toc-h{font-size:15px; font-weight:700; margin:22px 0 8px; color:#26403d}
+.r-toc{display:flex; flex-direction:column}
+.r-toc li{display:flex; justify-content:space-between; gap:16px; padding:7px 2px; border-bottom:1px solid #e2eeec; font-size:13px}
+.r-toc-w{color:#627876; flex:none}
+.r-mini{display:flex; justify-content:space-between; align-items:center; gap:16px; border-bottom:2px solid #5cc4b5; padding-bottom:10px; font-size:12px; color:#627876; line-height:1.6}
+.r-mini b{color:#26403d; font-size:14px}
+.r-mini img{width:58px; height:58px; object-fit:contain}
+.r-crumb{display:flex; justify-content:space-between; gap:12px; align-items:baseline; margin-top:22px; color:#8f3a55; font-weight:700; font-size:16px}
+.r-crumb-w{color:#1c5048; font-weight:600; font-size:12px; flex:none}
+.r-p-band{font-size:18px; font-weight:600; line-height:1.6; margin-top:10px; color:#26403d}
+.r-p-none{margin-top:32px; padding:32px; text-align:center; color:#627876; border:1px dashed #cfe6e2; border-radius:10px}
+.r-p-card{margin-top:28px; padding:28px 24px; border:1px solid #cfe6e2; border-radius:12px; display:flex; flex-direction:column; align-items:center; gap:12px; text-align:center}
+.r-p-num{font-size:12px; color:#627876; font-weight:600}
+.r-p-title{font-size:18px; font-weight:700; color:#1b776b; text-decoration:none; overflow-wrap:anywhere}
+.r-p-qr{width:210px; height:210px; image-rendering:pixelated}
+.r-p-hint{font-size:12px; color:#627876}
+.r-p-url{font-size:11.5px; color:#26403d; direction:ltr; overflow-wrap:anywhere; text-decoration:none; max-width:100%}
+.r-p-date{font-size:11.5px; color:#7c8f8d}
+@media (max-width:560px){
+  .r-page{padding:20px 16px; min-height:0}
+  .r-p-qr{width:170px; height:170px}
+}
 @page{size:A4; margin:14mm 12mm}
 @media print{
   :root{color-scheme:light}
@@ -307,6 +331,9 @@ select.field{appearance:auto}
   #m-preview{position:static; display:block!important; background:none; overflow:visible}
   .pv-scroll{height:auto; overflow:visible; padding:0}
   .rep{width:auto; padding:0; box-shadow:none; margin:0}
+  .rep.paged{display:block}
+  .r-page{display:block; box-shadow:none; padding:0; min-height:0; break-after:page; break-inside:avoid}
+  .r-page:last-child{break-after:auto}
 }
 </style>
 </head><body>
@@ -408,8 +435,13 @@ select.field{appearance:auto}
       </fieldset>
       <div id="x-el-wrap" hidden><label for="x-el">عنصر التقييم</label><select class="field" id="x-el"></select></div>
       <div id="x-band-wrap" hidden><label for="x-band">البند</label><select class="field" id="x-band"></select></div>
+      <fieldset class="seg">
+        <legend>طريقة الطباعة</legend>
+        <label><input type="radio" name="x-layout" value="paged" id="x-paged" checked> كل شاهد في صفحة مستقلة</label>
+        <label><input type="radio" name="x-layout" value="list" id="x-list"> قائمة متصلة</label>
+      </fieldset>
       <div class="checks">
-        <label><input type="checkbox" id="x-empty" checked> إظهار البنود التي ليس لها شواهد</label>
+        <label><input type="checkbox" id="x-empty"> إظهار البنود التي ليس لها شواهد</label>
         <label><input type="checkbox" id="x-qr" checked> إضافة رمز QR بجانب كل رابط (لفتحه من الورق)</label>
         <label><input type="checkbox" id="x-sign"> إضافة خانات التوقيع والختم</label>
       </div>
@@ -2126,12 +2158,12 @@ return {QRCode:QRCode,QRErrorCorrectLevel:QRErrorCorrectLevel};})();</script>
     });
     var label = scope === 'all' ? 'جميع الشواهد' : scope === 'el' ? 'عنصر: ' + ELEMENTS[ei][0] : 'بند: ' + bandTextOf(band);
     var file = scope === 'all' ? 'جميع الشواهد' : scope === 'el' ? ELEMENTS[ei][0] : bandTextOf(band);
-    return { groups: out, label: label, file: ('ملف الشواهد - ' + file).replace(/[\\/:*?"<>|]+/g, ' ').slice(0, 90) };
+    return { scope: scope, groups: out, label: label, file: ('ملف الشواهد - ' + file).replace(/[\\/:*?"<>|]+/g, ' ').slice(0, 90) };
   }
-  function qrData(text) {
+  function qrData(text, px) {
     var q = new QRLib.QRCode(-1, QRLib.QRErrorCorrectLevel.M);
     q.addData(unescape(encodeURIComponent(text))); q.make();
-    var n = q.getModuleCount(), quiet = 2, cell = Math.max(3, Math.floor(200 / (n + quiet * 2))), size = cell * (n + quiet * 2);
+    var n = q.getModuleCount(), quiet = 2, cell = Math.max(3, Math.floor((px || 200) / (n + quiet * 2))), size = cell * (n + quiet * 2);
     var c = document.createElement('canvas'); c.width = c.height = size;
     var x = c.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, size, size); x.fillStyle = '#000';
     for (var r = 0; r < n; r++) for (var k = 0; k < n; k++) if (q.isDark(r, k)) x.fillRect((k + quiet) * cell, (r + quiet) * cell, cell, cell);
@@ -2164,9 +2196,49 @@ return {QRCode:QRCode,QRErrorCorrectLevel:QRErrorCorrectLevel};})();</script>
     if (sign) html += '<div class="r-sign"><div>اسم مديرة المدرسة<b>' + MANAGER + '</b></div><div>التوقيع</div><div>الختم</div></div>';
     return html;
   }
+  function letterhead() {
+    return '<div class="r-head"><div class="r-letter">المملكة العربية السعودية · وزارة التعليم<br>الإدارة العامة للتعليم بمنطقة الرياض<br>قسم أداء التعليم / الإدارة المدرسية</div><img src="' + LOGO + '" alt=""></div>';
+  }
+  function miniHead() {
+    return '<div class="r-mini"><div><b>' + esc(S.school) + '</b><br>مديرة المدرسة: ' + MANAGER + '</div><img src="' + LOGO + '" alt=""></div>';
+  }
+  function buildPaged(sel) {
+    var useQr = $('x-qr').checked, sign = $('x-sign').checked, now = new Date(), pages = [];
+    var cover = letterhead() + '<h1>ملف شواهد الأداء الوظيفي لمديرة المدرسة</h1>' +
+      '<div class="r-meta"><div><b>اسم المدرسة:</b> ' + esc(S.school) + '</div><div><b>اسم المديرة:</b> ' + MANAGER + '</div>' +
+      '<div><b>المحتوى:</b> ' + esc(sel.label) + '</div><div><b>تاريخ الطباعة:</b> ' + esc(hijri(now)) + '</div></div>';
+    if (!sel.groups.length) return '<section class="r-page">' + cover + '<div class="r-empty">لا توجد شواهد ضمن هذا الاختيار.</div></section>';
+    if (sel.scope !== 'band') {
+      pages.push(cover + '<h2 class="r-toc-h">عناصر التقييم في هذا الملف</h2><ul class="r-toc">' +
+        sel.groups.map(function (g) { return '<li><span>' + esc(g.name) + '</span><span class="r-toc-w">' + g.weight + '</span></li>'; }).join('') + '</ul>');
+    }
+    sel.groups.forEach(function (g) {
+      g.bands.forEach(function (b) {
+        var crumb = miniHead() + '<div class="r-crumb"><span>' + esc(g.name) + '</span><span class="r-crumb-w">الوزن النسبي ' + g.weight + '</span></div>';
+        var valid = b.links.filter(function (l) { return safeUrl(l.url); });
+        if (!valid.length) {
+          pages.push(crumb + '<div class="r-p-band">' + esc(b.text) + '</div><div class="r-p-none">لم يُضف شاهد بعد.</div>');
+        }
+        valid.forEach(function (l, i) {
+          var href = safeUrl(l.url), d = l.createdAt ? new Date(l.createdAt) : null;
+          pages.push(crumb + '<div class="r-p-band">' + esc(b.text) + '</div>' +
+            '<div class="r-p-card">' +
+              (valid.length > 1 ? '<div class="r-p-num">الشاهد ' + arNum(i + 1) + ' من ' + arNum(valid.length) + '</div>' : '') +
+              '<a class="r-p-title" href="' + esc(href) + '" target="_blank" rel="noopener noreferrer" dir="auto">' + esc(l.title || hostOf(href)) + '</a>' +
+              (useQr ? '<img class="r-p-qr" alt="رمز QR للرابط" src="' + qrData(href, 420) + '"><div class="r-p-hint">امسحي الرمز بكاميرا الجوال لفتح الشاهد</div>' : '') +
+              '<a class="r-p-url" href="' + esc(href) + '" target="_blank" rel="noopener noreferrer">' + esc(href) + '</a>' +
+              (d && !isNaN(d) ? '<div class="r-p-date">أُضيف في ' + esc(hijri(d)) + '</div>' : '') +
+            '</div>');
+        });
+      });
+    });
+    if (sign) pages.push(miniHead() + '<div class="r-sign">' + '<div>اسم مديرة المدرسة<b>' + MANAGER + '</b></div><div>التوقيع</div><div>الختم</div></div>');
+    return pages.map(function (h) { return '<section class="r-page">' + h + '</section>'; }).join('');
+  }
   function showPreview() {
-    var sel = exportSelection();
-    $('report').innerHTML = buildReport(sel);
+    var sel = exportSelection(), paged = document.querySelector('input[name="x-layout"]:checked').value === 'paged';
+    $('report').className = 'rep' + (paged ? ' paged' : '');
+    $('report').innerHTML = paged ? buildPaged(sel) : buildReport(sel);
     S.x = sel;
     $('m-export').hidden = true;
     $('m-preview').hidden = false;
