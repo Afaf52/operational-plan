@@ -84,7 +84,9 @@ a { color:inherit; }
 
 /* Tabs */
 .tabs { position:sticky; top:env(safe-area-inset-top,0px); z-index:5; background:var(--surface); border-bottom:1px solid var(--line); }
-.tabs-in { display:flex; gap:4px; overflow-x:auto; scrollbar-width:none; }
+.tabs-bar { display:flex; align-items:center; gap:12px; }
+.tabs-in { display:flex; gap:4px; overflow-x:auto; scrollbar-width:none; flex:1 1 auto; min-width:0; }
+.year-sel { flex:none; height:36px; font-size:13px; font-weight:600; }
 .tabs-in::-webkit-scrollbar { display:none; }
 .tab { flex:none; display:flex; align-items:center; gap:8px; height:48px; padding:0 12px; border:0; background:none; color:var(--fg-3); font-weight:500; font-size:14px; white-space:nowrap; box-shadow:inset 0 -2px 0 transparent; }
 .tab:hover { color:var(--fg); }
@@ -326,7 +328,7 @@ body.ceremony.cer-light {
   </div>
   <button class="cta" id="awardCard" type="button" data-route="awards"></button>
 </div></header>
-<nav class="tabs" aria-label="صفحات المنصة"><div class="wrap tabs-in" id="tabs"></div></nav>
+<nav class="tabs" aria-label="صفحات المنصة"><div class="wrap tabs-bar"><div class="tabs-in" id="tabs"></div><select class="sel year-sel" id="yearSel" data-sel="year" aria-label="العام الهجري"></select></div></nav>
 <main class="wrap"><div id="banners"></div><div id="view"></div></main>
 
 <dialog id="formDlg" aria-labelledby="formTitle">
@@ -441,7 +443,7 @@ const ICONS = {
   "inbox":P_("M22 12h-6l-2 3h-4l-2-3H2 M5.45 5.11 2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z"),
 };
 const ic = n => `<svg class="ic" viewBox="0 0 24 24" aria-hidden="true">${ICONS[n]||""}</svg>`;
-const TEACHERS = ["منى السيد","أماني قاضي","أمل العطوة","نبيلة المغاسي","سرى الحازمي","حنان الشريف","أمل المحمدي","أفنان المهدي","دلال الحري","منال عشكان","سميرة الصبحي","حنان التميمي","عبير الدرادي","نجلاء المحمدي","نوال الجهني","منير الجهني","رحاب المري","صيطة الشريوني","ليلى الرحيلي","ابتسام الأحمري"];
+const TEACHERS = ["منى السيد","أماني قاضي","أمل العطوي","نبيلة المغامسي","سرى الحازمي","حنان الشريف","أمل المحمدي","أفنان المسعدي","دلال الحربي","منال عشكان","سميرة الصبحي","هناء التميمي","عبير الردادي","نجلاء المحمدي","نوال الجهني","منيرة الجهني","منيرة عبدالحميد","رحاب الحربي","بهية الشريوفي","ليلى الرحيلي","ابتسام الأحمدي","هدى الإمام","عزة عياد"];
 const PROGRAMS = {
   qudrat:{name:"قدرات",icon:"target",trackLabel:"النشاط",tracks:["كمي","لفظي"]},
   tahsili:{name:"تحصيلي",icon:"book-open",trackLabel:"المادة",tracks:["رياضيات","أحياء","كيمياء","فيزياء"]},
@@ -510,12 +512,15 @@ const pct = (a,b) => b ? Math.round(a / b * 100) : 0;
 /* ---------- names: match the same teacher across spelling variants ---------- */
 const nameKey = s => String(s || "").trim().replace(/\s+/g," ").replace(/[ً-ْ]/g,"").replace(/[أإآ]/g,"ا").replace(/ة/g,"ه").replace(/ى/g,"ي");
 const ROSTER = new Map(TEACHERS.map(t => [nameKey(t), t]));
+/* Earlier misread spellings: activities already saved under them count for the correct teacher. */
+const ALIASES = new Map([["أمل العطوة","أمل العطوي"],["نبيلة المغاسي","نبيلة المغامسي"],["أفنان المهدي","أفنان المسعدي"],["دلال الحري","دلال الحربي"],["حنان التميمي","هناء التميمي"],["عبير الدرادي","عبير الردادي"],["منير الجهني","منيرة الجهني"],["رحاب المري","رحاب الحربي"],["صيطة الشريوني","بهية الشريوفي"],["ابتسام الأحمري","ابتسام الأحمدي"]].map(([o,n]) => [nameKey(o),nameKey(n)]));
+const teacherKey = s => { const k = nameKey(s); return ALIASES.get(k) || k; };
 
 /* ---------- state ---------- */
 const S = {
   route:"home", loaded:false, canWrite:true, failed:false, noDb:false,
   activities:[], settings:{...DEFAULT_SETTINGS}, demo:false, confirm:null, limit:30,
-  pYear:"all", pTrack:"all", aYear:"all", aProg:"all", wYear:curYear(), wProg:"all", wMonth:"all", wEvid:false,
+  year:curYear(), pTrack:"all", aProg:"all", wProg:"all", wMonth:"all", wEvid:false,
   editing:null, formProg:"qudrat", dupOk:null, cert:null,
 };
 const clean = (id,d) => {
@@ -524,7 +529,7 @@ const clean = (id,d) => {
   const h = hijri(date);
   const teacher = String(d.teacher || "").trim() || "غير محدد";
   return {id, program:d.program, track:String(d.track||""), type:String(d.type||""), date, teacher,
-    students:Math.max(0,Number(d.students)||0), link:String(d.link||""), createdAt:Number(d.createdAt)||0, hy:h.y, hm:h.m, key:nameKey(teacher)};
+    students:Math.max(0,Number(d.students)||0), link:String(d.link||""), createdAt:Number(d.createdAt)||0, hy:h.y, hm:h.m, key:teacherKey(teacher)};
 };
 const all = () => S.demo ? demoData() : S.activities;
 const safeLink = u => { try { const x = new URL(u); return x.protocol === "https:" || x.protocol === "http:" ? x.href : null; } catch { return null; } };
@@ -639,9 +644,12 @@ function renderShell() {
     if (n>=1 && n<=w) week = `<span>الأسبوع ${n} من ${w}</span>`;
   }
   $("dateChips").innerHTML = `<span>${esc(weekday(iso))}، ${esc(hijriText(iso))}</span><span>${esc(gregText(iso))}</span>${week}`;
-  const leader = board(all().filter(a => a.hy===curYear()))[0];
+  const leader = board(all().filter(a => inYear(a,S.year)))[0];
   $("awardCard").innerHTML = `<span class="tr" aria-hidden="true">🏆</span><span class="tx"><b>لوحة التكريم</b><small>${leader?`الأولى: ${esc(leader.name)}، ${shares(leader.count)}`:"بانتظار أول مشاركة"}</small></span>${ic("chevron")}`;
   if (S.route==="awards") $("awardCard").setAttribute("aria-current","page"); else $("awardCard").removeAttribute("aria-current");
+  const ys = $("yearSel");
+  if (!ys.options.length) ys.innerHTML = yearOpts().map(([v,l]) => `<option value="${v}">${l}</option>`).join("");
+  ys.value = String(S.year);
   $("tabs").innerHTML = ROUTES.filter(x => x[0]!=="awards").map(([k,l,i]) => `<button class="tab" type="button" data-route="${k}"${S.route===k?' aria-current="page"':""}>${ic(i)}${l}</button>`).join("");
 }
 const banner = html => `<div class="banner">${ic("alert")}<span>${html}</span></div>`;
@@ -674,7 +682,7 @@ function emptyView(title,text) {
   return `<div class="panel empty"><i>${ic("inbox")}</i><h3>${title}</h3><p>${text}</p><div class="row">${adds}${demoBtn()}</div></div>`;
 }
 function viewHome() {
-  const list = all(); const b = board(list);
+  const list = all().filter(a => inYear(a,S.year)); const b = board(list);
   const roster = new Set(ROSTER.keys()); list.forEach(a => roster.add(a.key));
   const count = t => list.filter(a => a.type===t).length;
   const byProg = PK.map(k => [k,list.filter(a => a.program===k).length]);
@@ -690,7 +698,7 @@ function viewHome() {
     kpi("award",best,"أكثر برنامج نشاطًا"),
   ].join("");
   let body;
-  if (!list.length) body = emptyView("لم تُسجل أنشطة بعد","تظهر الإحصائيات ومراكز المعلمات هنا تلقائيًا بعد إضافة أول نشاط.");
+  if (!list.length) body = all().length ? emptyView(`لا توجد أنشطة في ${S.year} هـ`,"اختر عامًا آخر من أعلى الصفحة، أو أضف نشاطًا جديدًا.") : emptyView("لم تُسجل أنشطة بعد","تظهر الإحصائيات ومراكز المعلمات هنا تلقائيًا بعد إضافة أول نشاط.");
   else {
     const recent = [...list].sort((a,b) => b.date.localeCompare(a.date) || b.createdAt-a.createdAt).slice(0,5);
     body = `<div class="grid2">
@@ -721,7 +729,7 @@ function actRow(a,showProg=false) {
 function viewProgram(k) {
   const P = PROGRAMS[k];
   const base = all().filter(a => a.program===k);
-  const yearList = base.filter(a => inYear(a,S.pYear));
+  const yearList = base.filter(a => inYear(a,S.year));
   const list = yearList.filter(a => S.pTrack==="all" || a.track===S.pTrack).sort((a,b) => b.date.localeCompare(a.date) || b.createdAt-a.createdAt);
   const b = board(yearList);
   const head = pageHead("برنامج "+P.name,"الأنشطة والمشاركات المسجلة في هذا البرنامج",addBtn(k));
@@ -731,7 +739,7 @@ function viewProgram(k) {
   const medals = ["🥇","🥈","🥉"];
   const top = b.slice(0,3).map(t => `<div class="rank"><div class="no" aria-hidden="true">${medals[t.rank-1]||t.rank}</div><div><div class="nm">${esc(t.name)}</div><div class="sub">${girls(t.students)}</div></div><span class="count">${shares(t.count)}</span></div>`).join("") || `<p class="muted" style="padding-block:16px">لا توجد مشاركات في هذا العام.</p>`;
   const more = list.length > S.limit ? `<div style="padding-block:12px"><button class="btn sm" type="button" data-act="more">عرض المزيد (${list.length-S.limit})</button></div>` : "";
-  return head + `<div class="filters">${selCtl("pYear",S.pYear,yearOpts(),"العام")}</div>${stats}
+  return head + `${stats}
     <div class="grid2">
       ${panel(`توزيع الأنشطة حسب ${P.trackLabel==="النشاط"?"القسم":P.trackLabel}`,`<div class="panel-body"><div class="bars">${tr}</div></div>`)}
       ${panel(`الأكثر مشاركة في ${P.name}`,`<div class="panel-list">${top}</div>`,`<button class="link" type="button" data-act="see-awards" data-prog="${k}">الترتيب الكامل</button>`)}
@@ -744,7 +752,7 @@ function viewAnalytics() {
   const head = pageHead("التحليلات","من عام 1447 إلى 1450 هـ، حسب السنة الهجرية لتاريخ النشاط",logBtn);
   if (!everything.length) return head + emptyView("لا توجد بيانات لتحليلها بعد","تُبنى الرسوم والجداول هنا تلقائيًا من الأنشطة المحفوظة.");
   const progFiltered = everything.filter(a => S.aProg==="all" || a.program===S.aProg);
-  const list = progFiltered.filter(a => inYear(a,S.aYear));
+  const list = progFiltered.filter(a => inYear(a,S.year));
   const showProgs = S.aProg==="all" ? PK : [S.aProg];
 
   /* yearly stacked columns */
@@ -769,7 +777,7 @@ function viewAnalytics() {
   const b = board(list);
   const missing = TEACHERS.filter(t => !b.some(x => x.key===nameKey(t)));
   const stats = `<div class="kpis">${kpi("layers",list.length,"الأنشطة")}${kpi("users",b.length,"المعلمات المشاركات")}${kpi("graduation-cap",list.reduce((s,a) => s+a.students,0),"الطالبات المستفيدات")}${kpi("image",pct(list.filter(hasLink).length,list.length)+"%","أنشطة موثقة بشواهد")}</div>`;
-  return head + `<div class="filters">${segCtl("aProg",S.aProg,progOpts("كل البرامج"))}${selCtl("aYear",S.aYear,yearOpts(),"العام")}</div>${stats}
+  return head + `<div class="filters">${segCtl("aProg",S.aProg,progOpts("كل البرامج"))}</div>${stats}
     ${panel("الأنشطة عبر الأعوام",`<div class="panel-body">${showProgs.length>1?legend:""}<div><div class="cols" style="grid-template-columns:repeat(4,minmax(0,1fr))">${cols}</div><div class="col-labels" style="grid-template-columns:repeat(4,minmax(0,1fr))">${YEARS.map(y => `<span>${y} هـ</span>`).join("")}</div></div>${yearTable}</div>`)}
     ${panel("الأنشطة حسب الشهر الهجري",`<div class="panel-body"><div class="cols-scroll"><div class="months"><div class="cols" style="grid-template-columns:repeat(12,minmax(0,1fr))">${mCols}</div><div class="col-labels" style="grid-template-columns:repeat(12,minmax(0,1fr))">${HM.map(n => `<span>${n}</span>`).join("")}</div></div></div></div>`)}
     <div class="grid2">${panel("الأنشطة حسب النوع",`<div class="panel-body"><div class="bars">${types.map(([t,v]) => barRow(t,v,maxT)).join("")}</div></div>`)}
@@ -788,20 +796,20 @@ const BADGES = [
 ];
 const lifetime = key => board(all().filter(a => a.key===key))[0];
 const earned = key => { const t = lifetime(key); return t ? BADGES.filter(b => b[2](t)) : []; };
-const awardScope = () => all().filter(a => inYear(a,S.wYear) && (S.wMonth==="all" || a.hm===Number(S.wMonth)) && (!S.wEvid || hasLink(a)));
+const awardScope = () => all().filter(a => inYear(a,S.year) && (S.wMonth==="all" || a.hm===Number(S.wMonth)) && (!S.wEvid || hasLink(a)));
 const currentBoard = () => board(awardScope().filter(a => S.wProg==="all" || a.program===S.wProg));
 function scopeLabel() {
   return [S.wProg==="all" ? "جميع البرامج" : "برنامج "+PROGRAMS[S.wProg].name,
     S.wMonth!=="all" ? HM[Number(S.wMonth)-1] : null,
-    S.wYear==="all" ? "كل الأعوام" : S.wYear+" هـ",
+    S.year==="all" ? "كل الأعوام" : S.year+" هـ",
     S.wEvid ? "الأنشطة الموثقة فقط" : null].filter(Boolean).join("، ");
 }
 function viewAwards() {
   const yearly = awardScope(), b = currentBoard();
   const head = `<div class="hero"><div class="cup" aria-hidden="true">🏆</div><h2>لوحة التكريم والشكر</h2><p>شكرًا لكل معلمة تركت أثرًا. تُحسب المراكز تلقائيًا من عدد المشاركات: ${esc(scopeLabel())}</p></div>`;
   if (!all().length) return head + emptyView("تنتظر اللوحة أول مشاركة","بعد حفظ النشاط الأول، تظهر الميداليات وترتيب المعلمات هنا تلقائيًا.");
-  const month = S.wYear==="all" ? "" : selCtl("wMonth",S.wMonth,[["all","كل الأشهر"],...HM.map((n,i) => [i+1,n])],"الشهر الهجري");
-  const filters = `<div class="filters">${segCtl("wProg",S.wProg,progOpts("الترتيب العام"))}${selCtl("wYear",S.wYear,yearOpts(),"العام")}${month}<label class="check"><input type="checkbox" id="wEvid" data-check="wEvid"${S.wEvid?" checked":""}>الأنشطة الموثقة بشواهد فقط</label></div>`;
+  const month = S.year==="all" ? "" : selCtl("wMonth",S.wMonth,[["all","كل الأشهر"],...HM.map((n,i) => [i+1,n])],"الشهر الهجري");
+  const filters = `<div class="filters">${segCtl("wProg",S.wProg,progOpts("الترتيب العام"))}${month}<label class="check"><input type="checkbox" id="wEvid" data-check="wEvid"${S.wEvid?" checked":""}>الأنشطة الموثقة بشواهد فقط</label></div>`;
   const now = hijri(todayIso());
   const star = board(all().filter(a => a.hy===now.y && a.hm===now.m && (!S.wEvid || hasLink(a))))[0];
   const leads = `<div class="leads"><button class="lead star" type="button" data-act="star"><small>معلمة شهر ${HM[now.m-1]}</small><b>${esc(star?star.name:"—")}</b><span>${star?shares(star.count):"لا توجد مشاركات"}</span></button>${PK.map(k => {
@@ -1031,7 +1039,7 @@ async function submitForm(ev) {
   let teacher = $("fTeacher").value;
   if (!teacher) return formError("اختر اسم المعلمة.",$("fTeacher"));
   if (teacher===OTHER) { teacher = $("fTeacherOther").value.trim().replace(/\s+/g," "); if (!teacher) return formError("اكتب اسم المعلمة في خانة أخرى.",$("fTeacherOther")); }
-  teacher = ROSTER.get(nameKey(teacher)) || teacher;
+  teacher = ROSTER.get(teacherKey(teacher)) || teacher;
   const stRaw = $("fStudents").value.trim();
   const students = Number(stRaw);
   if (stRaw==="" || !Number.isInteger(students) || students<0) return formError("اكتب عدد الطالبات رقمًا صحيحًا.",$("fStudents"));
@@ -1099,7 +1107,7 @@ document.addEventListener("click", async ev => {
   else if (act==="copy-msg") copyHonor();
   else if (act==="csv-board") saveFile("ترتيب المعلمات.csv",boardCsv());
   else if (act==="csv-log") saveFile("سجل الأنشطة.csv",logCsv());
-  else if (act==="star") { const n = hijri(todayIso()); S.wYear = n.y; S.wMonth = n.m; S.wProg = "all"; render(); }
+  else if (act==="star") { const n = hijri(todayIso()); S.year = n.y; S.wMonth = n.m; S.wProg = "all"; render(); }
   else if (act==="demo-on") { S.demo = true; render(); }
   else if (act==="more") { S.limit += 30; render(); }
   else if (act==="see-awards") { S.wProg = b.dataset.prog; go("awards"); }
@@ -1113,7 +1121,7 @@ document.addEventListener("click", async ev => {
 });
 document.addEventListener("change",ev => {
   const el = ev.target;
-  if (el.dataset.sel) { S[el.dataset.sel] = el.value; S.limit = 30; if (el.dataset.sel==="wYear" && el.value==="all") S.wMonth = "all"; render(); }
+  if (el.dataset.sel) { S[el.dataset.sel] = el.value; S.limit = 30; if (el.dataset.sel==="year") S.wMonth = "all"; render(); }
   else if (el.dataset.check) { S[el.dataset.check] = el.checked; render(); }
 });
 $("actForm").addEventListener("submit",submitForm);
