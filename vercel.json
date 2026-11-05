@@ -18,6 +18,19 @@
       ]
     }
   ],
+  "redirects": [
+    {
+      "source": "/",
+      "has": [
+        {
+          "type": "host",
+          "value": "takreem-38.vercel.app"
+        }
+      ],
+      "destination": "/takreem",
+      "permanent": false
+    }
+  ],
   "rewrites": [
     {
       "source": "/hanan-alharbi",
