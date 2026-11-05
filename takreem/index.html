@@ -275,6 +275,31 @@ input[type="date"].input::-webkit-datetime-edit { padding:0; }
 .toast div { padding:8px 16px; border-radius:10px; background:var(--fg); color:var(--bg); font-size:14px; font-weight:500; }
 .tip { position:fixed; z-index:40; max-width:240px; padding:4px 8px; border-radius:6px; background:var(--fg); color:var(--bg); font-size:13px; pointer-events:none; }
 @media (prefers-reduced-motion: no-preference) { .fill,.seg-bar { transition:height .2s,width .2s; } }
+
+/* Awards ceremony: this one page always wears a night-navy and gold stage, in either theme. */
+body.ceremony {
+  --bg:#0d1c38; --surface:#16294a; --surface-2:#20365c; --line:#2c446c; --line-2:#415a84;
+  --fg:#f4f7fb; --fg-2:#c8d3e3; --fg-3:#a3b2c8;
+  --primary:#f2cf5b; --primary-h:#f7dc82; --on-primary:#1c2638; --tint:#f2cf5b;
+  --c1:#f2cf5b; --note-bg:#2c2b23; --note-fg:#f3e3a4; --note-line:#4f4826; --shadow:none;
+  color-scheme:dark;
+  background:radial-gradient(900px 460px at 50% 110px,rgba(242,207,91,.2),rgba(242,207,91,0) 72%) no-repeat,linear-gradient(180deg,#0d1c38,#0a1730);
+  background-color:var(--bg);
+}
+.hero { display:grid; justify-items:center; gap:4px; padding-block:12px 8px; text-align:center; }
+.hero .cup { font-size:64px; line-height:80px; height:80px; }
+.hero h2 { font-size:clamp(26px,4.4vw,36px); font-weight:700; line-height:1.3; color:var(--tint); }
+.hero p { max-width:60ch; font-size:14px; color:var(--fg-2); text-wrap:balance; }
+.confetti { position:fixed; inset:0; width:100%; height:100%; z-index:25; pointer-events:none; }
+@media (prefers-reduced-motion: no-preference) {
+  .enter .hero .cup { animation:cup-in .7s cubic-bezier(.2,1.4,.4,1); }
+  .enter .medal { animation:rise .55s cubic-bezier(.2,.9,.3,1) backwards; }
+  .enter .medal:nth-child(1) { animation-delay:.08s; }
+  .enter .medal:nth-child(2) { animation-delay:.2s; }
+  .enter .medal:nth-child(3) { animation-delay:.32s; }
+}
+@keyframes cup-in { from { transform:scale(.4) rotate(-14deg); opacity:0; } to { transform:none; opacity:1; } }
+@keyframes rise { from { transform:translateY(28px); opacity:0; } to { transform:none; opacity:1; } }
 </style>
 
 </head>
@@ -735,7 +760,7 @@ function scopeLabel() {
 }
 function viewAwards() {
   const yearly = awardScope(), b = currentBoard();
-  const head = pageHead("لوحة التكريم والشكر",`تُحسب المراكز تلقائيًا من عدد المشاركات. ${esc(scopeLabel())}`);
+  const head = `<div class="hero"><div class="cup" aria-hidden="true">🏆</div><h2>لوحة التكريم والشكر</h2><p>شكرًا لكل معلمة تركت أثرًا. تُحسب المراكز تلقائيًا من عدد المشاركات: ${esc(scopeLabel())}</p></div>`;
   if (!all().length) return head + emptyView("تنتظر اللوحة أول مشاركة","بعد حفظ النشاط الأول، تظهر الميداليات وترتيب المعلمات هنا تلقائيًا.");
   const month = S.wYear==="all" ? "" : selCtl("wMonth",S.wMonth,[["all","كل الأشهر"],...HM.map((n,i) => [i+1,n])],"الشهر الهجري");
   const filters = `<div class="filters">${segCtl("wProg",S.wProg,progOpts("الترتيب العام"))}${selCtl("wYear",S.wYear,yearOpts(),"العام")}${month}<label class="check"><input type="checkbox" id="wEvid" data-check="wEvid"${S.wEvid?" checked":""}>الأنشطة الموثقة بشواهد فقط</label></div>`;
@@ -760,8 +785,8 @@ function viewAwards() {
   }).join("");
   const restHtml = restRows ? panel("بقية المراكز",`<div class="panel-list">${restRows}</div>`) : "";
   const csv = S.dl && !S.demo ? `<button class="btn sm" type="button" data-act="csv-board">${ic("download")}تنزيل الترتيب</button>` : "";
-  const actions = `<div class="actions"><button class="btn sm" type="button" data-act="copy-msg">${ic("copy")}نسخ رسالة التكريم</button>${csv}</div>`;
-  return head + filters + leads + `<div class="podium">${cards}</div>` + actions + restHtml;
+  const actions = `<div class="actions"><button class="btn sm" type="button" data-act="party">🎉 احتفال</button><button class="btn sm" type="button" data-act="copy-msg">${ic("copy")}نسخ رسالة التكريم</button>${csv}</div>`;
+  return head + filters + `<div class="podium">${cards}</div>` + leads + actions + restHtml;
 }
 
 /* ---------- teacher card ---------- */
@@ -857,8 +882,48 @@ function copyHonor() {
   navigator.clipboard.writeText(text).then(() => toast("تم نسخ رسالة التكريم"),fallback);
 }
 
+/* ---------- ceremony: paper confetti once each time the awards page is entered ---------- */
+function confetti() {
+  if (document.hidden || (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches)) return;
+  const old = document.querySelector(".confetti"); if (old) old.remove();
+  const c = document.createElement("canvas"); c.className = "confetti"; c.setAttribute("aria-hidden","true");
+  document.body.appendChild(c);
+  const dpr = Math.min(window.devicePixelRatio||1,2), W = innerWidth, H = innerHeight;
+  c.width = W*dpr; c.height = H*dpr;
+  const x = c.getContext("2d"); x.scale(dpr,dpr);
+  const colors = ["#f2cf5b","#e8b31a","#ffffff","#8ab8ec","#1fa98c","#e8735a"];
+  const n = Math.min(170,Math.round(W/5)+70);
+  const bits = Array.from({length:n},() => ({
+    x:Math.random()*W, y:-20-Math.random()*H*.7, w:6+Math.random()*6, h:9+Math.random()*7,
+    vy:2+Math.random()*2.6, sway:Math.random()*6.28, swayV:.03+Math.random()*.05, swayA:.6+Math.random()*1.6,
+    rot:Math.random()*6.28, rotV:(Math.random()-.5)*.24, flip:Math.random()*6.28, flipV:.08+Math.random()*.14,
+    color:colors[Math.floor(Math.random()*colors.length)],
+  }));
+  const start = performance.now(), life = 4200;
+  (function frame(now) {
+    if (!c.isConnected) return;
+    const t = now-start;
+    x.clearRect(0,0,W,H);
+    x.globalAlpha = t>life-900 ? Math.max(0,(life-t)/900) : 1;
+    for (const b of bits) {
+      b.y += b.vy; b.sway += b.swayV; b.x += Math.sin(b.sway)*b.swayA; b.rot += b.rotV; b.flip += b.flipV;
+      if (b.y>H+20) continue;
+      x.save(); x.translate(b.x,b.y); x.rotate(b.rot); x.scale(1,Math.cos(b.flip));
+      x.fillStyle = b.color; x.fillRect(-b.w/2,-b.h/2,b.w,b.h); x.restore();
+    }
+    if (t<life) requestAnimationFrame(frame); else c.remove();
+  })(start);
+}
+let inCeremony = false;
 function render() {
   if (S.demo && S.activities.length) S.demo = false;
+  const ceremony = S.route==="awards";
+  document.body.classList.toggle("ceremony",ceremony);
+  const ready = S.loaded || S.demo, entered = ceremony && ready && !inCeremony;
+  if (!ceremony) { inCeremony = false; const old = document.querySelector(".confetti"); if (old) old.remove(); }
+  else if (ready) inCeremony = true;
+  $("view").classList.toggle("enter",entered);
+  if (entered && currentBoard().length) setTimeout(confetti,120);
   renderShell(); renderBanners();
   const active = document.activeElement && document.activeElement.id;
   const r = S.route, v = $("view");
@@ -991,6 +1056,7 @@ document.addEventListener("click", async ev => {
   else if (act==="close-cert") $("certDlg").close();
   else if (act==="close-msg") $("msgDlg").close();
   else if (act==="cert-save" && S.cert) S.cert.canvas.toBlob(bl => saveFile(`شهادة شكر - ${S.cert.name}.png`,bl),"image/png");
+  else if (act==="party") confetti();
   else if (act==="copy-msg") copyHonor();
   else if (act==="csv-board") saveFile("ترتيب المعلمات.csv",boardCsv());
   else if (act==="csv-log") saveFile("سجل الأنشطة.csv",logCsv());
