@@ -4,6 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex">
+<script>try{var t=localStorage.getItem("platform.theme");if(t==="dark"||t==="light")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E🏆%3C/text%3E%3C/svg%3E">
 <style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 <title>منصة القدرات والتحصيلي</title>
@@ -57,14 +58,15 @@ a { color:inherit; }
 
 /* School band */
 .head { background:linear-gradient(110deg,var(--head-a),var(--head-b)); color:var(--on-head); }
-.head-in { display:grid; grid-template-columns:44px minmax(0,1fr) 40px auto; grid-template-areas:"logo brand gear cta" "logo meta gear cta"; gap:4px 12px; align-items:center; padding-block:16px; }
+.head-in { display:grid; grid-template-columns:44px minmax(0,1fr) auto auto; grid-template-areas:"logo brand tools cta" "logo meta tools cta"; gap:4px 12px; align-items:center; padding-block:16px; }
+.head-tools { grid-area:tools; display:flex; gap:8px; }
 .logo { grid-area:logo; width:44px; height:44px; display:grid; place-items:center; border-radius:10px; background:var(--head-fill); border:1px solid var(--head-line); }
 .logo .ic { width:24px; height:24px; }
 .brand { grid-area:brand; min-width:0; align-self:end; }
 .brand h1 { font-size:18px; font-weight:700; line-height:1.35; }
 .brand p { font-size:13px; color:var(--head-gold); line-height:1.4; }
 .meta { grid-area:meta; display:flex; flex-wrap:wrap; gap:0 12px; font-size:13px; color:var(--head-2); align-self:start; }
-.gear { grid-area:gear; width:40px; height:40px; display:grid; place-items:center; border-radius:10px; background:var(--head-fill); border:1px solid var(--head-line); color:var(--on-head); }
+.gear { width:40px; height:40px; display:grid; place-items:center; border-radius:10px; background:var(--head-fill); border:1px solid var(--head-line); color:var(--on-head); }
 .gear:hover { background:var(--head-line); }
 .cta { grid-area:cta; display:flex; align-items:center; gap:12px; min-width:0; margin-inline-start:4px; padding:10px 16px; border:0; border-radius:12px; background:linear-gradient(115deg,var(--gold-b),var(--gold-a)); color:var(--on-gold); text-align:right; }
 .cta:hover { filter:brightness(1.04); }
@@ -75,7 +77,7 @@ a { color:inherit; }
 .cta small { display:block; font-size:13px; font-weight:500; line-height:1.4; }
 .cta .ic { opacity:.7; }
 @media (max-width:760px) {
-  .head-in { grid-template-columns:44px minmax(0,1fr) 40px; grid-template-areas:"logo brand gear" "meta meta meta" "cta cta cta"; gap:12px; padding-block:12px 16px; }
+  .head-in { grid-template-columns:44px minmax(0,1fr) auto; grid-template-areas:"logo brand tools" "meta meta meta" "cta cta cta"; gap:12px; padding-block:12px 16px; }
   .brand { align-self:center; }
   .cta { margin:0; }
 }
@@ -286,6 +288,15 @@ body.ceremony {
   background:radial-gradient(900px 460px at 50% 110px,rgba(242,207,91,.2),rgba(242,207,91,0) 72%) no-repeat,linear-gradient(180deg,#0d1c38,#0a1730);
   background-color:var(--bg);
 }
+body.ceremony.cer-light {
+  --bg:#fdf6dc; --surface:#ffffff; --surface-2:#f8efd0; --line:#eadfb6; --line-2:#d9ca97;
+  --fg:#17243d; --fg-2:#46506a; --fg-3:#67708a;
+  --primary:#1c3b66; --primary-h:#15304f; --on-primary:#ffffff; --tint:#7d5c06;
+  --c1:#b98a10; --note-bg:#fff8e1; --note-fg:#6b5208; --note-line:#efe0a6; --shadow:0 1px 2px rgba(90,70,10,.08);
+  color-scheme:light;
+  background:radial-gradient(900px 460px at 50% 110px,rgba(242,190,40,.3),rgba(242,190,40,0) 72%) no-repeat,linear-gradient(180deg,#fdf6dc,#fffdf3);
+  background-color:var(--bg);
+}
 .hero { display:grid; justify-items:center; gap:4px; padding-block:12px 8px; text-align:center; }
 .hero .cup { font-size:64px; line-height:80px; height:80px; }
 .hero h2 { font-size:clamp(26px,4.4vw,36px); font-weight:700; line-height:1.3; color:var(--tint); }
@@ -309,7 +320,10 @@ body.ceremony {
   <div class="logo" data-ic="graduation-cap" aria-hidden="true"></div>
   <div class="brand"><h1 id="school"></h1><p id="principal"></p></div>
   <div class="meta" id="dateChips"></div>
-  <button class="gear" id="gearBtn" type="button" aria-label="إعدادات المدرسة" title="إعدادات المدرسة" data-act="settings" data-ic="settings"></button>
+  <div class="head-tools">
+    <button class="gear" id="themeBtn" type="button" data-act="theme"></button>
+    <button class="gear" id="gearBtn" type="button" aria-label="إعدادات المدرسة" title="إعدادات المدرسة" data-act="settings" data-ic="settings"></button>
+  </div>
   <button class="cta" id="awardCard" type="button" data-route="awards"></button>
 </div></header>
 <nav class="tabs" aria-label="صفحات المنصة"><div class="wrap tabs-in" id="tabs"></div></nav>
@@ -402,6 +416,8 @@ const ICONS = {
   "languages":P_("M5 8l6 6 M4 14l6-6 2-3 M2 5h12 M7 2h1 M22 22l-5-10-5 10 M14 18h6"),
   "chart":P_("M3 3v18h18 M18 17V9 M13 17V5 M8 17v-3"),
   "settings":P_("M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z")+C_(12,12,3),
+  "sun":C_(12,12,4)+P_("M12 2v2 M12 20v2 M4.93 4.93l1.41 1.41 M17.66 17.66l1.41 1.41 M2 12h2 M20 12h2 M6.34 17.66l-1.41 1.41 M19.07 4.93l-1.41 1.41"),
+  "moon":P_("M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"),
   "plus":P_("M5 12h14 M12 5v14"),
   "x":P_("M18 6 6 18 M6 6l12 12"),
   "pencil":P_("M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"),
@@ -444,6 +460,26 @@ const DEFAULT_SETTINGS = {school:"الثانوية الثامنة والثلاث
 const $ = id => document.getElementById(id);
 const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 document.querySelectorAll("[data-ic]").forEach(e => { e.innerHTML = ic(e.dataset.ic); });
+
+/* ---------- theme: follows the device until the viewer picks one, then remembers it on this device ---------- */
+const THEME_KEY = "platform.theme";
+const root = document.documentElement;
+const darkQuery = window.matchMedia ? matchMedia("(prefers-color-scheme: dark)") : null;
+const effectiveTheme = () => root.getAttribute("data-theme") || (darkQuery && darkQuery.matches ? "dark" : "light");
+function paintTheme() {
+  const dark = effectiveTheme()==="dark", b = $("themeBtn"), label = dark ? "التبديل إلى الوضع الفاتح" : "التبديل إلى الوضع الداكن";
+  b.innerHTML = ic(dark ? "sun" : "moon"); b.title = label; b.setAttribute("aria-label",label);
+  document.body.classList.toggle("cer-light",!dark);
+}
+function toggleTheme() {
+  const next = effectiveTheme()==="dark" ? "light" : "dark";
+  root.setAttribute("data-theme",next);
+  try { localStorage.setItem(THEME_KEY,next); } catch {}
+  paintTheme();
+}
+try { const t = localStorage.getItem(THEME_KEY); if (t==="dark" || t==="light") root.setAttribute("data-theme",t); } catch {}
+paintTheme();
+if (darkQuery && darkQuery.addEventListener) darkQuery.addEventListener("change",paintTheme);
 
 /* ---------- dates ---------- */
 const ISO = /^\d{4}-\d{2}-\d{2}$/;
@@ -1049,6 +1085,7 @@ document.addEventListener("click", async ev => {
   if (act==="add") openForm(b.dataset.prog);
   else if (act==="close-form") $("formDlg").close();
   else if (act==="close-settings") $("setDlg").close();
+  else if (act==="theme") toggleTheme();
   else if (act==="settings") openSettings();
   else if (act==="teacher") openTeacher(b.dataset.key);
   else if (act==="close-teacher") $("teacherDlg").close();
